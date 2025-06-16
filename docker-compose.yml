@@ -1,0 +1,29 @@
+services:
+  stock-app:
+    build:
+      context: ./stock-app
+      dockerfile: ../Dockerfile.app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./stock-app:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - ./stock-app/.env
+    command: pnpm dev
+
+  stock-app-api:
+    build:
+      context: ./stock-app-api
+      dockerfile: ../Dockerfile.api
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./stock-app-api:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - ./stock-app-api/.env
