@@ -125,7 +125,7 @@ Supabase provides easy OAuth integration under **Authentication > Providers**.
 4. Copy **Client ID** and **Client Secret**
 5. In Supabase:
    - Go to **Authentication > Providers > LinkedIn**
-   - Paste credentials and enable the provider
+   - Paste credentials and enable the provider.  Note that Supabase refers to your LinkedIn ClientID as the API Key
 
 [Supabase Doc](https://supabase.com/docs/guides/auth/social-login/auth-linkedin)
 
