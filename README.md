@@ -91,15 +91,24 @@ Supabase provides easy OAuth integration under **Authentication > Providers**.
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Create a new project
-3. Navigate to **APIs & Services > Credentials**
-4. Create **OAuth 2.0 Client ID**:
+   1. Go to project finder - as of this writing in the top navigation under organization name
+   2. Create a new project using the “New Project” link
+   3. Navigate to the project
+4. Complete the wizard to setup the OAUth basics
+5. Activate the “Create OAUth Client"
+   6. Select Web Application for application type
+   7. Hit Add URI for your authorized redirect URIs - you can get this from Supabase under Project Settings -> Authentication -> Google -> Callback URL (for OAuth)
+   8.Note that if you’re running this in testing mode, please do, you’ll need to go to “Audience” in your application and add a Test User for the application
+4. Navigate to **APIs & Services > Credentials**
+5. Create **OAuth 2.0 Client ID**:
    - App Type: **Web**
    - Authorized Redirect URI:  
      ```
      https://<your-supabase-project-ref>.supabase.co/auth/v1/callback
      ```
-5. Copy **Client ID** and **Client Secret**
-6. In Supabase:
+6. Copy **Client ID**
+7. Copy your **Client Secret**.  Note this will be provided under the general application configuration screen in the upper right hand corner in an "i" surrounded by a blue circle.  Click on that and copy it
+8. In Supabase:
    - Go to **Authentication > Providers > Google**
    - Paste Client ID and Secret, and enable the provider
 
