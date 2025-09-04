@@ -56,7 +56,8 @@ cp .env.api.template ./stock-app-api/.env
 
 ### 2. Configure Supabase
 
-Create a Supabase project, then:
+This README assumes that you have setup a Supabase tenant and have a Supabase project created.
+If you haven't go do that first.  Then:
 
 #### 🔐 Connect to Supabase Database
 
@@ -67,7 +68,7 @@ Create a Supabase project, then:
 
 #### 🌐 Connect App Frameworks
 
-1. Go to **Settings > API > App Frameworks**
+1. Go to **Settings > Data API**
 2. Copy the following values:
    - `NEXT_PUBLIC_SUPABASE_URL`
      - Replace the value of the `SUPABASE_URL` key in `.env` for stock-app-api
@@ -78,7 +79,7 @@ Create a Supabase project, then:
 
 #### 🔑 JWT Secret
 
-1. Go to **Settings > API > Configuration > Data API**
+1. Go to **Settings > JWT Keys**
 2. Reveal the `JWT Secret`, replace the value of your `SUPABASE_JWT_SECRET` key in `.env` for stock-app-api
 ---
 
