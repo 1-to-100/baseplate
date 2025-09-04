@@ -43,7 +43,7 @@ Ensure you have the following installed:
 ### 1. Clone Repositories
 
 ```bash
-git clone git@github.com:1-to-100/baseplate.git
+git clone https://github.com/1-to-100/baseplate.git
 
 cd baseplate/
 
