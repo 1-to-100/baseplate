@@ -43,9 +43,9 @@ Ensure you have the following installed:
 ### 1. Clone Repositories
 
 ```bash
-git clone git@github.com:1-to-100/baseplate-start.git
+git clone git@github.com:1-to-100/baseplate.git
 
-cd baseplate-start/
+cd baseplate/
 
 git clone -b dev git@github.com:1-to-100/stock-app.git
 cp .env.app.template ./stock-app/.env
