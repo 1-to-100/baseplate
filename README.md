@@ -47,10 +47,10 @@ git clone https://github.com/1-to-100/baseplate.git
 
 cd baseplate/
 
-git clone -b dev git@github.com:1-to-100/stock-app.git
+git clone -b dev https://github.com/1-to-100/stock-app.git
 cp .env.app.template ./stock-app/.env
 
-git clone -b dev git@github.com:1-to-100/stock-app-api.git
+git clone -b dev https://github.com/1-to-100/stock-app-api.git
 cp .env.api.template ./stock-app-api/.env
 ```
 
