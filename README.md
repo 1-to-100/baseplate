@@ -98,7 +98,7 @@ Supabase provides easy OAuth integration under **Authentication > Providers**.
 5. Activate the “Create OAUth Client"
    6. Select Web Application for application type
    7. Hit Add URI for your authorized redirect URIs - you can get this from Supabase under Project Settings -> Authentication -> Google -> Callback URL (for OAuth)
-   8.Note that if you’re running this in testing mode, please do, you’ll need to go to “Audience” in your application and add a Test User for the application
+   8. Note that if you’re running this in testing mode, please do, you’ll need to go to “Audience” in your application and add a Test User for the application
 4. Navigate to **APIs & Services > Credentials**
 5. Create **OAuth 2.0 Client ID**:
    - App Type: **Web**
