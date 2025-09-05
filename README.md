@@ -268,3 +268,15 @@ To authenticate with Gmail’s SMTP, you need to create an App Password:
    - Paste this password into the **Password** field in your Supabase SMTP settings
 
 Once saved, all transactional emails from Supabase will be sent using your configured SMTP server and custom domain.
+
+---
+
+## Setup a super user account for yourself
+* Your app should now be running on localhost
+* Login to the app (either with user / pass or via federated login)
+* Logout of the app - you should now have a record in the users table
+* Go to Supabase
+* Select [Your Project] -> Database -> Tables -> Users
+* For the Users Table select the three vertical dots and activate the “View In Table Editor” option
+* This will show you all the users in the system.  Select your user and set the is_superadmin = true
+* Log back in and you should now see the extended set of system management options
