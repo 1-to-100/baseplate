@@ -62,9 +62,10 @@ If you haven't go do that first.  Then:
 #### 🔐 Connect to Supabase Database
 
 1. Go to Supabase project → **Connect** (top bar)
-2. Under **Connection string**:
+2. Go to **ORMs** tab and select **Prisma** from Tool dropdown:
    - Copy the **Direct connection** and replace the value of your `DIRECT_URL` key in `.env` for stock-app-api
    - Copy the **Transaction pooler** and replace the value of your `DATABASE_URL` key in `.env` for stock-app-api
+   - Replace `[YOUR-PASSWORD]` token for both .env files
 
 #### 🌐 Connect App Frameworks
 
