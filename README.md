@@ -70,23 +70,40 @@ If you haven't go do that first.  Then:
 #### 🌐 Connect App Frameworks
 
 1. Go to **Settings > Data API**
-2. Copy the following values:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-     - Replace the value of the `SUPABASE_URL` key in `.env` for stock-app-api
-     - Replace the value of the `NEXT_PUBLIC_SUPABASE_URL` key in `.env` for stock-app
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-     - Replace the value of the `SUPABASE_SERVICE_ROLE_KEY` key in `.env` for stock-app-api
-     - Replace the value of the `NEXT_PUBLIC_SUPABASE_ANON_KEY` key in `.env` for stock-app
+2. Copy the **Project URL**:
+   - Replace the value of the `SUPABASE_URL` key in `.env` for stock-app-api
+   - Replace the value of the `NEXT_PUBLIC_SUPABASE_URL` key in `.env` for stock-app
+3. Go to **Settings > API Keys**
+4. Copy the **Legacy API Keys**:
+   - **anon/public**: Replace the value of the `NEXT_PUBLIC_SUPABASE_ANON_KEY` key in `.env` for stock-app
+   - **service_role/secret**: Replace the value of the `SUPABASE_SERVICE_ROLE_KEY` key in `.env` for stock-app-api
 
 #### 🔑 JWT Secret
 
 1. Go to **Settings > JWT Keys**
-2. Reveal the `JWT Secret`, replace the value of your `SUPABASE_JWT_SECRET` key in `.env` for stock-app-api
+2. In the **Legacy JWT Secret** tab, click **Reveal** to show the JWT secret
+3. Copy the revealed JWT secret and replace the value of your `SUPABASE_JWT_SECRET` key in `.env` for stock-app-api
+
 ---
 
 ## 🔐 Setting up OAuth in Supabase
 
 Supabase provides easy OAuth integration under **Authentication > Providers**.
+
+### 🌐 Configure URL Settings
+
+Before setting up OAuth providers, you need to configure your site URL and redirect URLs:
+
+1. Go to **Authentication > URL Configuration**
+2. Set your **Site URL**:
+   - For local development: `http://localhost:3000`
+   - For production: `https://yourdomain.com`
+3. Add **Redirect URLs**:
+   - For local development: `http://localhost:3000/**`
+   - For production: `https://yourdomain.com/**`
+4. Click **Save changes**
+
+> **Important**: These URLs must match your application's domain and the redirect URLs you'll configure in your OAuth providers.
 
 ### ✅ Google OAuth
 
