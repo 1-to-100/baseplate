@@ -1,8 +1,8 @@
 services:
   stock-app:
     build:
-      context: ./stock-app
-      dockerfile: ../Dockerfile.app
+      context: .
+      dockerfile: Dockerfile.app
     ports:
       - "3000:3000"
     volumes:
@@ -16,8 +16,8 @@ services:
 
   stock-app-api:
     build:
-      context: ./stock-app-api
-      dockerfile: ../Dockerfile.api
+      context: .
+      dockerfile: Dockerfile.api
     ports:
       - "3001:3001"
     volumes:
