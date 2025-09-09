@@ -9,6 +9,7 @@ This guide explains how to create and structure frontend components in the stock
 - [Component Structure](#component-structure)
 - [Creating New Components](#creating-new-components)
 - [Component Patterns](#component-patterns)
+- [Routing and Navigation](#routing-and-navigation)
 - [Styling Guidelines](#styling-guidelines)
 - [Testing with Storybook](#testing-with-storybook)
 - [Best Practices](#best-practices)
@@ -202,6 +203,367 @@ export function MyForm({ onSubmit }: MyFormProps): React.JSX.Element {
     </form>
   );
 }
+```
+
+## Routing and Navigation
+
+This section explains how to register routes and create menu items in the Next.js application.
+
+### 1. Route Registration with Next.js App Router
+
+The application uses Next.js 15 with the App Router, which uses file-based routing. Routes are automatically registered based on the file structure in the `src/app/` directory.
+
+#### Basic Route Structure
+
+```
+src/app/
+├── (marketing)/          # Route group (doesn't affect URL)
+│   ├── layout.tsx        # Layout for marketing pages
+│   └── page.tsx          # Home page (/)
+├── auth/                 # Authentication routes
+│   ├── sign-in/
+│   │   └── page.tsx      # /auth/sign-in
+│   └── sign-up/
+│       └── page.tsx      # /auth/sign-up
+└── dashboard/            # Dashboard routes
+    ├── layout.tsx        # Dashboard layout
+    ├── page.tsx          # /dashboard
+    ├── users/
+    │   └── page.tsx      # /dashboard/users
+    └── [id]/             # Dynamic route
+        └── page.tsx      # /dashboard/[id]
+```
+
+#### Creating a New Route
+
+1. **Create the page file** in the appropriate directory:
+
+```typescript
+// src/app/dashboard/products/page.tsx
+import * as React from 'react';
+import type { Metadata } from 'next';
+import { config } from '@/config';
+
+export const metadata: Metadata = {
+  title: `Products | Dashboard | ${config.site.name}`,
+};
+
+export default function ProductsPage(): React.JSX.Element {
+  return (
+    <div>
+      <h1>Products</h1>
+      {/* Your page content */}
+    </div>
+  );
+}
+```
+
+2. **Add the route to paths.ts** for type safety and centralized path management:
+
+```typescript
+// src/paths.ts
+export const paths = {
+  // ... existing paths
+  dashboard: {
+    // ... existing dashboard paths
+    products: {
+      list: '/dashboard/products',
+      create: '/dashboard/products/create',
+      details: (productId: string) => `/dashboard/products/${productId}`,
+    },
+  },
+} as const;
+```
+
+#### Dynamic Routes
+
+For dynamic routes, use square brackets in the folder name:
+
+```typescript
+// src/app/dashboard/products/[id]/page.tsx
+interface PageProps {
+  params: { id: string };
+}
+
+export default function ProductDetailsPage({ params }: PageProps): React.JSX.Element {
+  return (
+    <div>
+      <h1>Product Details: {params.id}</h1>
+    </div>
+  );
+}
+```
+
+#### Route Groups
+
+Use parentheses to create route groups without affecting the URL:
+
+```
+src/app/
+├── (marketing)/          # Marketing pages group
+│   ├── about/
+│   └── contact/
+└── (dashboard)/          # Dashboard pages group
+    ├── users/
+    └── products/
+```
+
+### 2. Navigation Configuration
+
+The application uses a centralized navigation configuration system located in `src/components/dashboard/layout/config.ts`.
+
+#### Navigation Structure
+
+Navigation items are defined using the `NavItemConfig` interface:
+
+```typescript
+// src/types/nav.d.ts
+export interface NavItemConfig {
+  key: string;
+  title?: string;
+  disabled?: boolean;
+  external?: boolean;
+  icon?: string;
+  href?: string;
+  items?: NavItemConfig[];
+  type?: 'divider';
+  show?: (userInfo: { isSuperadmin?: boolean; isCustomerSuccess?: boolean }) => boolean;
+  matcher?: { type: 'startsWith' | 'equals'; href: string };
+}
+```
+
+#### Adding a New Menu Item
+
+1. **Add the icon** to the nav-icons configuration:
+
+```typescript
+// src/components/dashboard/layout/nav-icons.ts
+import { Package as PackageIcon } from '@phosphor-icons/react/dist/ssr/Package';
+
+export const icons = {
+  // ... existing icons
+  'package': PackageIcon,
+} as Record<string, Icon>;
+```
+
+2. **Add the menu item** to the layout configuration:
+
+```typescript
+// src/components/dashboard/layout/config.ts
+export const layoutConfig: LayoutConfig = {
+  navItems: [
+    {
+      key: 'dashboards',
+      title: 'Dashboards',
+      items: [
+        // ... existing items
+        { 
+          key: 'products', 
+          title: 'Products', 
+          href: paths.dashboard.products.list, 
+          icon: 'package' 
+        },
+      ],
+    },
+  ],
+};
+```
+
+#### Creating Nested Menu Items
+
+For dropdown menus with sub-items:
+
+```typescript
+{
+  key: 'products',
+  title: 'Products',
+  icon: 'package',
+  items: [
+    { key: 'products-list', title: 'List Products', href: paths.dashboard.products.list },
+    { key: 'products-create', title: 'Create Product', href: paths.dashboard.products.create },
+  ],
+}
+```
+
+#### Adding Dividers
+
+Use dividers to separate menu sections:
+
+```typescript
+{
+  key: 'divider1',
+  type: 'divider',
+  show: (userInfo) => userInfo.isSuperadmin || userInfo.isCustomerSuccess,
+}
+```
+
+#### Role-Based Menu Items
+
+Control menu item visibility based on user roles:
+
+```typescript
+{
+  key: 'admin-only',
+  title: 'Admin Panel',
+  href: paths.dashboard.admin,
+  icon: 'gear-six',
+  show: (userInfo) => userInfo.isSuperadmin,
+}
+```
+
+### 3. Page Layout and Metadata
+
+#### Page Metadata
+
+Always include proper metadata for SEO and browser display:
+
+```typescript
+import type { Metadata } from 'next';
+import { config } from '@/config';
+
+export const metadata: Metadata = {
+  title: `Page Title | Dashboard | ${config.site.name}`,
+  description: 'Page description for SEO',
+};
+```
+
+#### Dashboard Layout
+
+Dashboard pages automatically inherit the dashboard layout from `src/app/dashboard/layout.tsx`. This layout includes:
+
+- Side navigation
+- Main navigation header
+- Authentication guard
+- Responsive design
+
+#### Custom Layouts
+
+For pages that need different layouts, create a new layout file:
+
+```typescript
+// src/app/custom-layout/layout.tsx
+export default function CustomLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}): React.JSX.Element {
+  return (
+    <div>
+      <h1>Custom Layout</h1>
+      {children}
+    </div>
+  );
+}
+```
+
+### 4. Navigation Patterns
+
+#### Active State Detection
+
+The navigation automatically detects active states using the `isNavItemActive` utility:
+
+```typescript
+// For exact matches
+{ key: 'home', title: 'Home', href: '/dashboard' }
+
+// For starts-with matches (useful for nested routes)
+{ 
+  key: 'products', 
+  title: 'Products', 
+  href: '/dashboard/products',
+  matcher: { type: 'startsWith', href: '/dashboard/products' }
+}
+```
+
+#### External Links
+
+For external links, use the `external` property:
+
+```typescript
+{
+  key: 'docs',
+  title: 'Documentation',
+  href: 'https://docs.example.com',
+  external: true,
+  icon: 'question',
+}
+```
+
+#### Disabled Menu Items
+
+Temporarily disable menu items:
+
+```typescript
+{
+  key: 'coming-soon',
+  title: 'Coming Soon',
+  href: '#',
+  disabled: true,
+  icon: 'clock',
+}
+```
+
+### 5. Best Practices
+
+#### Route Organization
+
+- Group related routes in folders
+- Use descriptive folder and file names
+- Keep route structure shallow when possible
+- Use route groups for logical organization
+
+#### Navigation Structure
+
+- Keep menu items logically grouped
+- Use consistent icon naming
+- Implement proper role-based access control
+- Provide clear visual hierarchy
+
+#### Performance
+
+- Use dynamic imports for heavy pages
+- Implement proper loading states
+- Optimize metadata for each page
+- Use Next.js Image component for images
+
+#### Accessibility
+
+- Provide proper ARIA labels
+- Ensure keyboard navigation works
+- Use semantic HTML elements
+- Test with screen readers
+
+### 6. Common Patterns
+
+#### Protected Routes
+
+All dashboard routes are automatically protected by the `AuthGuard` component in the dashboard layout.
+
+#### Modal Routes
+
+Use Next.js parallel routes for modals:
+
+```
+src/app/dashboard/
+├── @modal/
+│   └── (..)modal/
+│       └── [id]/
+│           └── page.tsx
+└── layout.tsx
+```
+
+#### Search and Filtering
+
+Implement search and filtering in list pages:
+
+```typescript
+const [searchTerm, setSearchTerm] = useState('');
+const [filters, setFilters] = useState({});
+
+const { data } = useQuery({
+  queryKey: ['items', searchTerm, filters],
+  queryFn: () => getItems({ search: searchTerm, ...filters }),
+});
 ```
 
 ## Styling Guidelines
@@ -473,7 +835,234 @@ export function UserForm({ onSubmit, initialData }: UserFormProps): React.JSX.El
 }
 ```
 
+### Example 4: Creating a New Route and Menu Item
+
+This example shows how to create a complete "Reports" feature with routing and navigation.
+
+#### Step 1: Add Route to paths.ts
+
+```typescript
+// src/paths.ts
+export const paths = {
+  // ... existing paths
+  dashboard: {
+    // ... existing dashboard paths
+    reports: {
+      list: '/dashboard/reports',
+      create: '/dashboard/reports/create',
+      details: (reportId: string) => `/dashboard/reports/${reportId}`,
+      analytics: '/dashboard/reports/analytics',
+    },
+  },
+} as const;
+```
+
+#### Step 2: Create the Page Component
+
+```typescript
+// src/app/dashboard/reports/page.tsx
+"use client";
+
+import * as React from 'react';
+import type { Metadata } from 'next';
+import Box from '@mui/joy/Box';
+import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
+import Button from '@mui/joy/Button';
+import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
+import { config } from '@/config';
+
+const metadata: Metadata = {
+  title: `Reports | Dashboard | ${config.site.name}`,
+};
+
+export default function ReportsPage(): React.JSX.Element {
+  return (
+    <Box sx={{ p: 'var(--Content-padding)' }}>
+      <Stack spacing={3}>
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{ alignItems: 'center', justifyContent: 'space-between' }}
+        >
+          <Typography fontSize="xl3" level="h1">
+            Reports
+          </Typography>
+          <Button
+            variant="solid"
+            color="primary"
+            startDecorator={<PlusIcon />}
+            href="/dashboard/reports/create"
+          >
+            Create Report
+          </Button>
+        </Stack>
+        
+        <Box>
+          <Typography level="body-md" color="neutral">
+            Your reports will appear here.
+          </Typography>
+        </Box>
+      </Stack>
+    </Box>
+  );
+}
+```
+
+#### Step 3: Add Icon to Navigation
+
+```typescript
+// src/components/dashboard/layout/nav-icons.ts
+import { ChartBar as ChartBarIcon } from '@phosphor-icons/react/dist/ssr/ChartBar';
+
+export const icons = {
+  // ... existing icons
+  'chart-bar': ChartBarIcon,
+} as Record<string, Icon>;
+```
+
+#### Step 4: Add Menu Item to Navigation
+
+```typescript
+// src/components/dashboard/layout/config.ts
+export const layoutConfig: LayoutConfig = {
+  navItems: [
+    {
+      key: 'dashboards',
+      title: 'Dashboards',
+      items: [
+        // ... existing items
+        { 
+          key: 'reports', 
+          title: 'Reports', 
+          href: paths.dashboard.reports.list, 
+          icon: 'chart-bar',
+          matcher: { type: 'startsWith', href: '/dashboard/reports' }
+        },
+      ],
+    },
+  ],
+};
+```
+
+### Example 5: Creating a Nested Menu with Sub-items
+
+This example shows how to create a "Settings" menu with multiple sub-items.
+
+#### Step 1: Define Nested Routes
+
+```typescript
+// src/paths.ts
+export const paths = {
+  dashboard: {
+    settings: {
+      general: '/dashboard/settings',
+      profile: '/dashboard/settings/profile',
+      security: '/dashboard/settings/security',
+      notifications: '/dashboard/settings/notifications',
+      billing: '/dashboard/settings/billing',
+    },
+  },
+} as const;
+```
+
+#### Step 2: Create Nested Menu Structure
+
+```typescript
+// src/components/dashboard/layout/config.ts
+export const layoutConfig: LayoutConfig = {
+  navItems: [
+    {
+      key: 'dashboards',
+      title: 'Dashboards',
+      items: [
+        // ... existing items
+        {
+          key: 'settings',
+          title: 'Settings',
+          icon: 'gear-six',
+          matcher: { type: 'startsWith', href: '/dashboard/settings' },
+          items: [
+            { 
+              key: 'settings-general', 
+              title: 'General', 
+              href: paths.dashboard.settings.general 
+            },
+            { 
+              key: 'settings-profile', 
+              title: 'Profile', 
+              href: paths.dashboard.settings.profile 
+            },
+            { 
+              key: 'settings-security', 
+              title: 'Security', 
+              href: paths.dashboard.settings.security 
+            },
+            { 
+              key: 'settings-notifications', 
+              title: 'Notifications', 
+              href: paths.dashboard.settings.notifications 
+            },
+            { 
+              key: 'settings-billing', 
+              title: 'Billing', 
+              href: paths.dashboard.settings.billing 
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
+```
+
+### Example 6: Role-Based Menu Items
+
+This example shows how to create menu items that are only visible to certain user roles.
+
+```typescript
+// src/components/dashboard/layout/config.ts
+export const layoutConfig: LayoutConfig = {
+  navItems: [
+    {
+      key: 'dashboards',
+      title: 'Dashboards',
+      items: [
+        // ... existing items
+        
+        // Admin-only menu item
+        {
+          key: 'admin-panel',
+          title: 'Admin Panel',
+          href: paths.dashboard.admin,
+          icon: 'gear-six',
+          show: (userInfo) => userInfo.isSuperadmin,
+        },
+        
+        // Customer Success and Admin menu item
+        {
+          key: 'customer-support',
+          title: 'Customer Support',
+          href: paths.dashboard.support,
+          icon: 'headphones',
+          show: (userInfo) => userInfo.isSuperadmin || userInfo.isCustomerSuccess,
+        },
+        
+        // Divider for role-based sections
+        {
+          key: 'divider-admin',
+          type: 'divider',
+          show: (userInfo) => userInfo.isSuperadmin || userInfo.isCustomerSuccess,
+        },
+      ],
+    },
+  ],
+};
+```
+
 ## Development Workflow
+
+### For Components
 
 1. **Plan your component**: Define props, behavior, and styling requirements
 2. **Create the component file**: Follow the established patterns
@@ -483,6 +1072,26 @@ export function UserForm({ onSubmit, initialData }: UserFormProps): React.JSX.El
 6. **Test in Storybook**: Verify component behavior and appearance
 7. **Integrate into the app**: Use the component in your pages/features
 8. **Document usage**: Add JSDoc comments for complex props
+
+### For New Pages/Routes
+
+1. **Plan your feature**: Define the page structure, data requirements, and user interactions
+2. **Add routes to paths.ts**: Define all related routes for type safety
+3. **Create page components**: Implement the main page and any sub-pages
+4. **Add navigation items**: Update the navigation configuration
+5. **Add icons**: Register any new icons in the nav-icons configuration
+6. **Implement role-based access**: Add proper permission checks if needed
+7. **Test navigation**: Verify menu items work correctly and show proper active states
+8. **Add metadata**: Include proper page titles and descriptions
+
+### For Navigation Updates
+
+1. **Identify the change**: Determine what needs to be added, modified, or removed
+2. **Update nav-icons.ts**: Add any new icons needed
+3. **Modify config.ts**: Update the navigation configuration
+4. **Test role-based visibility**: Ensure menu items show/hide correctly based on user roles
+5. **Verify active states**: Check that navigation highlighting works properly
+6. **Test responsive behavior**: Ensure navigation works on mobile and desktop
 
 ## Resources
 
