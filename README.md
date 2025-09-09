@@ -205,6 +205,30 @@ npm run start:dev // npm run start:dev:env - alternative start command (as start
 
 ---
 
+## 🌱 Data Seeding & Cleanup
+
+### Docker
+```bash
+# Seed test data
+docker compose exec stock-app-api npm run docker:seed
+
+# Cleanup test data
+docker compose exec stock-app-api npm run docker:cleanup
+```
+
+### Non-Docker
+```bash
+# Seed test data
+cd stock-app-api
+npm run cli:seed
+
+# Cleanup test data
+cd stock-app-api
+npm run cli:cleanup
+```
+
+---
+
 ## 📘 API Documentation
 
 The backend provides Swagger documentation.
@@ -277,6 +301,6 @@ Once saved, all transactional emails from Supabase will be sent using your confi
 * Logout of the app - you should now have a record in the users table
 * Go to Supabase
 * Select [Your Project] -> Database -> Tables -> Users
-* For the Users Table select the three vertical dots and activate the “View In Table Editor” option
+* For the Users Table select the three vertical dots and activate the "View In Table Editor" option
 * This will show you all the users in the system.  Select your user and set the is_superadmin = true
 * Log back in and you should now see the extended set of system management options
