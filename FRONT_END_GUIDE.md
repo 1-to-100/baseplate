@@ -338,7 +338,7 @@ export interface NavItemConfig {
 
 ```typescript
 // src/components/dashboard/layout/nav-icons.ts
-import { Package as PackageIcon } from '@phosphor-icons/react/dist/ssr/Package';
+import { PackageIcon } from '@phosphor-icons/react/dist/ssr/Package';
 
 export const icons = {
   // ... existing icons
@@ -1243,7 +1243,7 @@ import Box from '@mui/joy/Box';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import Button from '@mui/joy/Button';
-import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
+import { PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
 import { config } from '@/config';
 
 const metadata: Metadata = {
@@ -1287,7 +1287,7 @@ export default function ReportsPage(): React.JSX.Element {
 
 ```typescript
 // src/components/dashboard/layout/nav-icons.ts
-import { ChartBar as ChartBarIcon } from '@phosphor-icons/react/dist/ssr/ChartBar';
+import { ChartBarIcon } from '@phosphor-icons/react/dist/ssr/ChartBar';
 
 export const icons = {
   // ... existing icons
