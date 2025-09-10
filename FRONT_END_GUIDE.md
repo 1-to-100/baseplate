@@ -566,6 +566,380 @@ const { data } = useQuery({
 });
 ```
 
+## Core UI Components and Their Advantages
+
+This section explains the key UI components available in Material-UI Joy and their specific advantages for building robust, accessible, and maintainable interfaces.
+
+### 1. Table Component
+
+The `Table` component provides a powerful and flexible way to display tabular data with built-in features for sorting, selection, and responsive design.
+
+#### Advantages:
+- **Built-in Accessibility**: Proper ARIA labels, keyboard navigation, and screen reader support
+- **Responsive Design**: Automatic handling of overflow and mobile layouts
+- **Selection Management**: Built-in row selection with checkboxes and keyboard shortcuts
+- **Sorting Capabilities**: Easy column sorting with visual indicators
+- **Performance**: Virtualization support for large datasets
+- **Consistent Styling**: Matches your design system automatically
+
+#### Variants:
+```typescript
+import { Table, Sheet } from '@mui/joy';
+
+// Basic table
+<Table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>John Doe</td>
+      <td>john@example.com</td>
+    </tr>
+  </tbody>
+</Table>
+
+// Sticky header table
+<Table stickyHeader>
+  {/* Table content */}
+</Table>
+
+// Striped rows
+<Table stripe="odd">
+  {/* Table content */}
+</Table>
+
+// Hover effects
+<Table hoverRow>
+  {/* Table content */}
+</Table>
+```
+
+#### Best Practices:
+- Use `Sheet` component as container for better styling
+- Implement proper column widths for consistent layout
+- Add loading states for data fetching
+- Use `useSelection` hook for row selection management
+
+### 2. Tabs Component
+
+The `Tabs` component provides an intuitive way to organize content into separate panels, improving navigation and reducing cognitive load.
+
+#### Advantages:
+- **Space Efficiency**: Organize related content without cluttering the interface
+- **Better UX**: Clear visual hierarchy and content separation
+- **Keyboard Navigation**: Full keyboard support with arrow keys
+- **Accessibility**: Proper ARIA attributes and focus management
+- **Responsive**: Automatic handling of overflow on smaller screens
+- **Flexible Styling**: Multiple variants for different use cases
+
+#### Variants:
+```typescript
+import { Tabs, TabList, Tab, TabPanel } from '@mui/joy';
+
+// Basic tabs
+<Tabs defaultValue={0}>
+  <TabList>
+    <Tab>Overview</Tab>
+    <Tab>Details</Tab>
+    <Tab>Settings</Tab>
+  </TabList>
+  <TabPanel value={0}>Overview content</TabPanel>
+  <TabPanel value={1}>Details content</TabPanel>
+  <TabPanel value={2}>Settings content</TabPanel>
+</Tabs>
+
+// Vertical tabs
+<Tabs orientation="vertical" defaultValue={0}>
+  <TabList>
+    <Tab>Profile</Tab>
+    <Tab>Security</Tab>
+    <Tab>Notifications</Tab>
+  </TabList>
+  <TabPanel value={0}>Profile content</TabPanel>
+  <TabPanel value={1}>Security content</TabPanel>
+  <TabPanel value={2}>Notifications content</TabPanel>
+</Tabs>
+
+// Sticky tabs
+<Tabs sticky>
+  <TabList>
+    <Tab>Sticky Tab 1</Tab>
+    <Tab>Sticky Tab 2</Tab>
+  </TabList>
+</Tabs>
+```
+
+#### Best Practices:
+- Use descriptive tab labels
+- Limit the number of tabs (5-7 maximum)
+- Implement lazy loading for tab content
+- Use icons alongside text for better visual hierarchy
+
+### 3. Breadcrumbs Component
+
+The `Breadcrumbs` component provides clear navigation context, helping users understand their location within the application hierarchy.
+
+#### Advantages:
+- **Navigation Context**: Shows current location and path
+- **Improved UX**: Easy way to navigate back to parent pages
+- **SEO Benefits**: Structured navigation for search engines
+- **Accessibility**: Screen reader friendly with proper ARIA labels
+- **Responsive**: Automatic truncation on smaller screens
+- **Customizable**: Support for custom separators and styling
+
+#### Variants:
+```typescript
+import { Breadcrumbs, Link } from '@mui/joy';
+
+// Basic breadcrumbs
+<Breadcrumbs>
+  <Link href="/dashboard">Dashboard</Link>
+  <Link href="/dashboard/users">Users</Link>
+  <Typography>John Doe</Typography>
+</Breadcrumbs>
+
+// With custom separator
+<Breadcrumbs separator="→">
+  <Link href="/dashboard">Dashboard</Link>
+  <Link href="/dashboard/products">Products</Link>
+  <Typography>Product Details</Typography>
+</Breadcrumbs>
+
+// With icons
+<Breadcrumbs>
+  <Link href="/dashboard" startDecorator={<HomeIcon />}>
+    Dashboard
+  </Link>
+  <Link href="/dashboard/users" startDecorator={<UsersIcon />}>
+    Users
+  </Link>
+  <Typography startDecorator={<UserIcon />}>
+    Profile
+  </Typography>
+</Breadcrumbs>
+```
+
+#### Best Practices:
+- Keep breadcrumb paths logical and meaningful
+- Use the last item as plain text (current page)
+- Implement proper link styling for better UX
+- Consider mobile-friendly truncation
+
+### 4. Autocomplete Component
+
+The `Autocomplete` component provides intelligent input suggestions, improving data entry speed and accuracy.
+
+#### Advantages:
+- **Improved UX**: Faster data entry with suggestions
+- **Data Validation**: Reduces input errors with predefined options
+- **Search Functionality**: Built-in filtering and search capabilities
+- **Keyboard Navigation**: Full keyboard support for accessibility
+- **Flexible Options**: Support for custom rendering and complex data
+- **Performance**: Efficient filtering and virtualization for large datasets
+
+#### Variants:
+```typescript
+import { Autocomplete, Option } from '@mui/joy';
+
+// Basic autocomplete
+<Autocomplete
+  options={['Option 1', 'Option 2', 'Option 3']}
+  placeholder="Select an option"
+/>
+
+// With custom options
+<Autocomplete
+  options={[
+    { label: 'John Doe', value: 'john', email: 'john@example.com' },
+    { label: 'Jane Smith', value: 'jane', email: 'jane@example.com' },
+  ]}
+  getOptionLabel={(option) => option.label}
+  renderOption={(props, option) => (
+    <Option {...props}>
+      <Box>
+        <Typography>{option.label}</Typography>
+        <Typography level="body-sm" color="neutral">
+          {option.email}
+        </Typography>
+      </Box>
+    </Option>
+  )}
+/>
+
+// Multiple selection
+<Autocomplete
+  multiple
+  options={['Tag 1', 'Tag 2', 'Tag 3']}
+  placeholder="Select multiple tags"
+/>
+
+// With custom filtering
+<Autocomplete
+  options={options}
+  filterOptions={(options, { inputValue }) =>
+    options.filter((option) =>
+      option.label.toLowerCase().includes(inputValue.toLowerCase())
+    )
+  }
+/>
+```
+
+#### Best Practices:
+- Provide clear placeholder text
+- Implement proper loading states for async data
+- Use debouncing for search queries
+- Consider implementing custom option rendering for complex data
+
+### 5. Select Component
+
+The `Select` component provides a dropdown interface for choosing from a list of options, ensuring consistent data selection.
+
+#### Advantages:
+- **Data Consistency**: Prevents invalid input with predefined options
+- **Space Efficient**: Compact interface for option selection
+- **Accessibility**: Proper keyboard navigation and screen reader support
+- **Validation**: Built-in validation for required selections
+- **Customizable**: Support for custom option rendering
+- **Mobile Friendly**: Native mobile behavior on touch devices
+
+#### Variants:
+```typescript
+import { Select, Option } from '@mui/joy';
+
+// Basic select
+<Select placeholder="Choose an option">
+  <Option value="option1">Option 1</Option>
+  <Option value="option2">Option 2</Option>
+  <Option value="option3">Option 3</Option>
+</Select>
+
+// With default value
+<Select defaultValue="option1">
+  <Option value="option1">Option 1</Option>
+  <Option value="option2">Option 2</Option>
+</Select>
+
+// Multiple selection
+<Select multiple placeholder="Select multiple options">
+  <Option value="option1">Option 1</Option>
+  <Option value="option2">Option 2</Option>
+  <Option value="option3">Option 3</Option>
+</Select>
+
+// With custom rendering
+<Select
+  placeholder="Choose a user"
+  renderValue={(selected) => (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Avatar size="sm" src={selected.avatar} />
+      <Typography>{selected.name}</Typography>
+    </Box>
+  )}
+>
+  {users.map((user) => (
+    <Option key={user.id} value={user}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Avatar size="sm" src={user.avatar} />
+        <Box>
+          <Typography>{user.name}</Typography>
+          <Typography level="body-sm" color="neutral">
+            {user.email}
+          </Typography>
+        </Box>
+      </Box>
+    </Option>
+  ))}
+</Select>
+```
+
+#### Best Practices:
+- Group related options logically
+- Use clear, descriptive option labels
+- Implement proper loading states
+- Consider using icons for better visual hierarchy
+
+### 6. Input Component
+
+The `Input` component provides a versatile text input interface with built-in validation, formatting, and accessibility features.
+
+#### Advantages:
+- **Consistent Styling**: Matches your design system automatically
+- **Built-in Validation**: Visual error states and validation feedback
+- **Accessibility**: Proper ARIA attributes and keyboard navigation
+- **Flexible Types**: Support for various input types (text, email, password, etc.)
+- **Customizable**: Extensive styling options and variants
+- **Form Integration**: Works seamlessly with form libraries
+
+#### Variants:
+```typescript
+import { Input, FormControl, FormLabel } from '@mui/joy';
+
+// Basic input
+<Input placeholder="Enter text" />
+
+// With label and validation
+<FormControl error={!!error}>
+  <FormLabel>Email Address</FormLabel>
+  <Input
+    type="email"
+    placeholder="Enter your email"
+    value={value}
+    onChange={onChange}
+  />
+</FormControl>
+
+// Different sizes
+<Input size="sm" placeholder="Small input" />
+<Input size="md" placeholder="Medium input" />
+<Input size="lg" placeholder="Large input" />
+
+// With start/end decorators
+<Input
+  placeholder="Search..."
+  startDecorator={<SearchIcon />}
+  endDecorator={<Button size="sm">Search</Button>}
+/>
+
+// Password input with toggle
+<Input
+  type={showPassword ? 'text' : 'password'}
+  placeholder="Enter password"
+  endDecorator={
+    <Button
+      variant="plain"
+      size="sm"
+      onClick={() => setShowPassword(!showPassword)}
+    >
+      {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
+    </Button>
+  }
+/>
+
+// Read-only input
+<Input
+  value="Read-only value"
+  readOnly
+  variant="plain"
+/>
+
+// Disabled input
+<Input
+  placeholder="Disabled input"
+  disabled
+/>
+```
+
+#### Best Practices:
+- Use appropriate input types for better mobile experience
+- Provide clear placeholder text and labels
+- Implement proper validation and error handling
+- Use decorators sparingly to avoid clutter
+- Consider using FormControl for consistent form styling
+
 ## Styling Guidelines
 
 ### 1. Use Material-UI Joy Components
