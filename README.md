@@ -3,7 +3,7 @@
 
 This guide walks through setting up and running the **Baseplate**, which consists of:
 
-- A **Next.js frontend** (`stock-app`) // TODO: will need to rename repositories in some time
+- A **Next.js frontend** (`stock-app`)
 - A **NestJS backend** (`stock-app-api`)
 - **Supabase** for authentication, database, and storage
 - Docker-based deployment
@@ -321,3 +321,20 @@ Once saved, all transactional emails from Supabase will be sent using your confi
 * For the Users Table select the three vertical dots and activate the "View In Table Editor" option
 * This will show you all the users in the system.  Select your user and set the is_superadmin = true
 * Log back in and you should now see the extended set of system management options
+
+---
+
+## Seting up Cursor
+
+Baseplate uses Cursor as our IDE of choice.  To do that
+* Download Cursor at https://cursor.com/download
+* You'll need to either setup a Cursor account or be added to a pre-existing team
+* Setup Supabase as an MCP for cursor.  By far the easiest way to do that is got to the relevant document: https://supabase.com/docs/guides/getting-started/mcp and press the "Add to Cursor" button
+ * If for some reason you can't do that read the instructions on that document
+* You're now going to want to setup Cursor to understand a few other aspects of your development enviroment
+ * In Cursor go to Settings -> Cursor Settings -> Background Agents
+  * We recommend connecting to the relevant GitHub account and Slack account that you have
+  * This will let you issue git commans in the cursor agent and post information to Slack
+ * Next go to Settings -> Cursor Settings -> Indexing and Docs.  This will let you setup coding paradigms for Baseplate
+ * Simply add the URL for the developer guide and Cursor should do the rest - https://1to100.com/baseplate/developer-guide/ 
+
